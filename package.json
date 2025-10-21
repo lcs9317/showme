@@ -5,20 +5,23 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "deploy": "gh-pages -d out"
+    "pub:docs": "shx rm -rf docs && shx mkdir -p docs && shx cp -r out/* docs",
+    "deploy": "cross-env GITHUB_ACTIONS=true next build && npm run pub:docs && git add docs && git commit -m \"docs: publish\" && git push"
   },
   "dependencies": {
+    "next": "15.5.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.6"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "cross-env": "^10.1.0",
+    "gh-pages": "^6.3.0",
+    "shx": "^0.4.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
