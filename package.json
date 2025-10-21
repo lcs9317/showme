@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "pub:docs": "shx rm -rf docs && shx mkdir -p docs && shx cp -r out/* docs",
-    "deploy": "cross-env GITHUB_ACTIONS=true next build && npm run pub:docs && git add docs && git commit -m \"docs: publish\" && git push"
+    "predeploy": "cross-env GITHUB_ACTIONS=true next build",
+    "deploy": "gh-pages -d out -b gh-pages"
   },
   "dependencies": {
     "next": "15.5.6",
