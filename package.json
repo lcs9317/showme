@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "predeploy": "cross-env GITHUB_ACTIONS=true next build",
-    "deploy": "gh-pages -d out -b gh-pages"
+    "predeploy": "cross-env NODE_ENV=production next build && shx mkdir -p out && shx touch out/.nojekyll",
+    "deploy": "gh-pages -d out -b gh-pages --dotfiles"
   },
   "dependencies": {
     "next": "15.5.6",
