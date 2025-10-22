@@ -61,18 +61,57 @@ export default function PortfolioPage() {
         return (
           <Section>
             <H2>아키텍처</H2>
-            <Card title="구조">
+
+            <Card title="요약">
               <UL>
-                <LI>레이어드: Controller → Service → Repository</LI>
-                <LI>DTO / Schema 검증: Zod / class-validator</LI>
-                <LI>에러 핸들링: 공통 Error 타입 + 글로벌 필터</LI>
-                <LI>설정 분리: .env.dev / .env.prod & Config 모듈</LI>
+                <LI>프런트엔드: <b>Vercel</b>에 <b>Next.js</b> 호스팅 (FORK 동기화)</LI>
+                <LI>정적 자산: <b>S3</b> 저장 → <b>CloudFront</b>(<code>cdn.relife.kr</code>) 배포, <b>ACM</b> TLS</LI>
+                <LI>백엔드: <b>EC2</b>(Seoul) + <b>Docker</b>, <b>Nginx Proxy Manager</b> 앞단, <b>Spring Boot</b> 애플리케이션</LI>
+                <LI>데이터: <b>PostgreSQL</b> (RDB) · <b>Redis</b> (캐시/세션/레이트리밋)</LI>
+                <LI>보안: <b>Spring Security</b> + <b>OAuth2</b>, 전 구간 HTTPS(<code>api.relife.kr</code>)</LI>
+                <LI>AI 연동: <b>Gemini API</b>(텍스트) · <b>Stable Diffusion API</b>(이미지)</LI>
+                <LI>DevOps: <b>GitHub Actions</b> Blue/Green, <b>Terraform</b>으로 IaC</LI>
               </UL>
             </Card>
-            <Card title="데이터 모델(예시)">
+
+            <Card title="트래픽 흐름">
               <UL>
-                <LI>User(계정/권한) ↔ Routine(반복 작업) ↔ Activity(단일 활동)</LI>
-                <LI>집계 테이블로 통계(주/월 단위)</LI>
+                <LI>사용자 → <code>api.relife.kr</code>(<b>Vercel(Next.js)</b>) → <b>EC2</b>(Nginx → Spring Boot)</LI>
+                <LI>정적 파일/이미지: 클라이언트 → <b>CloudFront(cdn.relife.kr)</b> → <b>S3</b> </LI>
+              </UL>
+            </Card>
+
+            <Card title="백엔드 구성 (AWS · Seoul)">
+              <UL>
+                <LI><b>Nginx Proxy Manager</b>: 도메인 라우팅/HTTPS 종단, 리버스 프록시</LI>
+                <LI><b>Spring Boot</b>: 도메인 API, <b>Spring Security + OAuth2</b> 인증</LI>
+                <LI><b>Redis</b>: 세션/토큰 블랙리스트/레이트 리밋/캐시</LI>
+                <LI><b>PostgreSQL</b>: 영속 데이터베이스</LI>
+                <LI><b>S3</b>: AI로 생성한 이미지 업로드 및 캐싱</LI>
+              </UL>
+            </Card>
+
+            <Card title="CI/CD & 인프라">
+              <UL>
+                <LI><b>GitHub Actions</b>: 프런트(Vercel 프리뷰→프로덕션), 백엔드(Docker 빌드→EC2 Blue/Green)</LI>
+                <LI><b>Terraform</b>: EC2/S3/CloudFront/ACM 등 인프라 선언적 관리</LI>
+                <LI><b>ACM</b>: 인증서 발급/갱신, CloudFront·프록시 HTTPS 적용</LI>
+              </UL>
+            </Card>
+
+            <Card title="보안 포인트">
+              <UL>
+                <LI>전 구간 <b>HTTPS</b> 강제(<code>cdn.relife.kr</code>, <code>api.relife.kr</code>, <code>www.relife.kr</code>)</LI>
+                <LI><b>OAuth2</b> 로그인, 역할 기반 접근 제어</LI>
+                <LI>Nginx에서 기본 <b>Rate Limit</b>/헤더 보안, CORS 정책</LI>
+                <LI><b>DSC(Double Submit Cookie)</b>를 통한 <b>CSRF</b>방어 및 <b>CSP(content security policy)</b>를 통한 <b>XSS</b>방어</LI>
+              </UL>
+            </Card>
+
+            <Card title="AI 접목">
+              <UL>
+                <LI><b>Gemini API</b>: 텍스트/시나리오 생성</LI>
+                <LI><b>Stable Diffusion API</b>: 이미지 생성 파이프라인</LI>
               </UL>
             </Card>
           </Section>
@@ -82,51 +121,95 @@ export default function PortfolioPage() {
         return (
           <Section>
             <H2>트러블슈팅</H2>
-            <Card title="1) N+1 쿼리로 인한 응답 지연">
+
+            <Card title="1) 프런트 협업 부재로 트리 UI 왜곡">
               <P>
-                활동 목록 API에서 사용자별 하위 데이터가 반복 조회되어 <b>N+1</b> 발생.
-                <br />→ <b>조인 + 배치 조회</b>로 전환하고 선택 필드만 조회하여 <b>쿼리 수 ~70% 절감</b>.
+                초기에 트리 출력 로직이 <b>일자형 나열</b>로만 보이는 문제가 있었음.
+                프런트와 사용성 관점이 어긋나 <b>무엇을 숨기고/드러낼지 기준이 부재</b>했다.
+                <br />→ 프런트 담당자와 합의해 각 노드에 <b>표현 속성</b>(가시/비가시, 앵커/프렐류드 등)을 부여하고,
+                렌더 단계에서 <b>숨김·노출 규칙</b>을 분리하여 문제 해결.
               </P>
             </Card>
-            <Card title="2) 파일 업로드에서 서버 부하">
+
+            <Card title="2) AI 컨텍스트 비대화로 응답 15s+ 지연">
               <P>
-                서버 직접 업로드로 메모리 피크 발생.
-                <br />→ <b>클라이언트 → S3 Presigned URL</b>로 변경, 서버는 메타데이터만 처리.
+                프롬프트 컨텍스트가 비대해져 <b>응답 지연(15s+)</b> 발생.
+                <br />→ 배포 담당과 협의해 <b>PostgreSQL + VectorDB</b> 도입,
+                시드를 <b>단어/토픽 단위</b>로 저장 후 <b>유사도 검색</b>으로 필요한 문맥만 주입.
+                그 결과 <b>다양성</b>을 유지하면서도 <b>지연 시간을 대폭 단축</b>.
               </P>
             </Card>
-            <Card title="3) 동시성에서 토큰 재발급 레이스">
+
+            <Card title="3) 동기화 폭증(O(m·n)) 문제">
               <P>
-                동시에 요청 시 리프레시 토큰이 중복 발급되는 이슈.
-                <br />→ 토큰 버전 필드와 <b>원자적 갱신</b>으로 단일 유효 토큰만 유지.
+                세계선(m) × 노드(n) 동기화가 <b>O(m·n)</b>으로 기하급수적으로 증가.
+                <br />→ <b>DVCS형 구조</b>로 전환해 결정라인이 <b>최신 노드 버전(commit)을 참조</b>하도록 설계.
+                동기화는 <b>변경분</b>만 처리되어 실효 복잡도가 <b>O(N)</b> 수준으로 축소.
+              </P>
+            </Card>
+
+            <Card title="4) 보안 기본선 강화(CSRF/XSS)">
+              <P>
+                초기엔 CSRF/XSS에 대한 방어선이 불충분.
+                <br />→ <b>CSRF 토큰</b> 적용 및 <b>CSP</b> 정책 도입으로
+                스크립트 인젝션·크로스사이트 요청 위조 리스크를 완화.
               </P>
             </Card>
           </Section>
         );
 
+
       case "performance":
         return (
           <Section>
             <H2>성능 개선 & 지표</H2>
-            <Card title="API 성능">
+
+            <Card title="동기화 복잡도 개선">
               <UL>
-                <LI>핵심 API p95: <b>450ms → 180ms</b> (캐싱 + 인덱스 최적화)</LI>
-                <LI>DB 쿼리 수: <b>-68%</b> (선택 필드/프리로드 최적화)</LI>
+                <LI>
+                  세계선(m) × 노드(n) 동기화: <b>O(m·n)</b> ⟶
+                  <b> O(N)</b> (DVCS형 <i>commit reference</i>로 최신 노드만 추적)
+                </LI>
+                <LI>
+                  라인 복제 대신 <b>버전 참조</b>와 <b>변경분 반영</b>으로 동기화 비용 급감
+                </LI>
               </UL>
             </Card>
-            <Card title="안정성/운영">
+
+            <Card title="AI 응답시간 단축">
               <UL>
-                <LI>에러율: <b>-60%</b> (에러 표준화 & 재시도 정책)</LI>
-                <LI>릴리즈 리드타임: <b>1.5일 → 0.5일</b> (CI 병렬화/자동화)</LI>
+                <LI>
+                  컨텍스트 비대화로 <b>~15초</b>까지 늘던 응답 ⟶
+                  <b> ~5초(±)</b> 수준으로 단축
+                </LI>
+                <LI>
+                  <b>VectorDB 유사도 검색</b> 기반 <b>필요 문맥만 주입</b>하여
+                  품질과 지연 시간을 동시 개선
+                </LI>
               </UL>
             </Card>
-            <Card title="개인 기여 포인트">
+
+            <Card title="운영/보안 품질선">
               <UL>
-                <LI>백엔드 구조 설계 및 인증 파이프라인 주도</LI>
-                <LI>운영 자동화(테스트/배포) 도입으로 팀 생산성 향상</LI>
+                <LI>CSRF 토큰 + <b>CSP</b> 정책으로 기본 보안선 강화</LI>
+                <LI>프런트 협업을 통한 <b>렌더 규칙 분리</b>로 UI 일관성 향상</LI>
+              </UL>
+            </Card>
+
+            <Card title="향후 개선 계획">
+              <UL>
+                <LI>
+                  <b>옵션 수정(선택지 수정)</b> 워크플로 완성 ⟶ DVCS 장점 극대화
+                </LI>
+                <LI>
+                  AI 추론 파라미터(<code>topK</code>, <code>topP</code>, <code>temperature</code>) 튜닝으로
+                  <b>품질↔지연</b> 최적점 탐색
+                </LI>
               </UL>
             </Card>
           </Section>
         );
+
     }
   }, [tab]);
 
