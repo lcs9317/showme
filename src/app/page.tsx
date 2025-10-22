@@ -17,11 +17,12 @@ export default function PortfolioPage() {
               <DT>이름</DT><DD>이찬수</DD>
               <DT>작성일</DT><DD>2025.10.22</DD>
               <DT>프로젝트</DT><DD>ReLife</DD>
-              <DT>역할</DT><DD>백엔드(Node.js)</DD>
+              <DT>역할</DT><DD>백엔드(Java Spring)</DD>
               <DT>요약</DT>
               <DD>
-                ReLife는 <b>사용자 생활 패턴/이력</b>을 바탕으로 <b>루틴 복구 및 동기부여</b>를 돕는 서비스입니다.
-                저는 <b>Node.js 기반 백엔드</b>를 맡아 인증/도메인 API/배포 파이프라인을 담당했습니다.
+                ReLife는 <b>사용자의 기존 인생</b>을 바탕으로 <b>다른 삶을 살았다면 어땠을까</b>를 알아보는 서비스입니다.
+                <br></br>이 프로젝트는 <b>Java Spring 기반 프로젝트</b> 이며 
+                저의 역할은 <b>백엔드 팀장</b>을 맡아 Node API와 AI 선택지, 보안을 담당했습니다.
               </DD>
             </DL>
           </Section>
@@ -33,24 +34,24 @@ export default function PortfolioPage() {
             <H2>기술 & 빌드</H2>
             <Card title="스택">
               <UL>
-                <LI>Node.js (Express/Nest 중 사용 프레임워크), TypeScript</LI>
-                <LI>DB: (MySQL/PostgreSQL/MongoDB 중 선택) + ORM (Prisma/TypeORM)</LI>
-                <LI>캐시/큐: (Redis, Bull 등 사용 시)</LI>
-                <LI>테스트: Jest + Supertest</LI>
+                <LI>Java Spring, Next.Js, TypeScript, React</LI>
+                <LI>DB: PostgreSQL + Hibernate</LI>
+                <LI>캐시: Redis</LI>
+                <LI>테스트: Junit</LI>
               </UL>
             </Card>
             <Card title="빌드/배포">
               <UL>
                 <LI>CI/CD: GitHub Actions (빌드/테스트/배포)</LI>
-                <LI>배포: (AWS EC2/Elastic Beanstalk/Render 등) + Docker</LI>
-                <LI>관측: 구조화 로그 & Health Check</LI>
+                <LI>배포: AWS(EC2/Elastic, 아우로라(PostgreSQL), S3, CloudFront) + Docker + nginx</LI>
+                <LI>관측: Health Check</LI>
               </UL>
             </Card>
             <Card title="주요 기능(백엔드)">
               <UL>
-                <LI>인증: JWT/OAuth (리프레시, 재발급, 만료 전략)</LI>
-                <LI>루틴/활동 도메인 API: CRUD + Validation + 표준 에러</LI>
-                <LI>파일 업로드: (S3/Cloud Storage) Presigned URL</LI>
+                <LI>인증: Session/OAuth (Redis를 통한 갱신, TTL 전략)</LI>
+                <LI>Node 도메인 API: CRUD + Validation</LI>
+                <LI>이미지: S3와 연결된 CDN URL</LI>
               </UL>
             </Card>
           </Section>
@@ -136,7 +137,7 @@ export default function PortfolioPage() {
           이찬수의 포트폴리오
         </h1>
         <p className="text-sm text-wood-600 mt-1">
-          작성일: 2025.10.22 · 프로젝트: ReLife · 역할: Node.js
+          작성일: 2025.10.22 · 프로젝트: ReLife · 역할: 팀장(백엔드)
         </p>
       </header>
 
