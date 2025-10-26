@@ -71,6 +71,7 @@ export default function PortfolioPage() {
                 <LI>보안: <b>Spring Security</b> + <b>OAuth2</b>, 전 구간 HTTPS(<code>api.relife.kr</code>)</LI>
                 <LI>AI 연동: <b>Gemini API</b>(텍스트) · <b>Stable Diffusion API</b>(이미지)</LI>
                 <LI>DevOps: <b>GitHub Actions</b> Blue/Green, <b>Terraform</b>으로 IaC</LI>
+                <LI> 사진 추가해야함 </LI>
               </UL>
             </Card>
 
